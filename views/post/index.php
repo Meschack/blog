@@ -1,5 +1,2 @@
-<?php require VIEW_PATH . '/layouts/header.php'; ?>
-
+<?php $title = 'Mon blog' ?>
 <h1>Listing des articles</h1>
-
-<?php require VIEW_PATH . '/layouts/footer.php'; ?>
