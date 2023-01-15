@@ -3,7 +3,7 @@
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 // On instancie Faker pour générer des données aléatoires
-$faker = Faker\Factory::create();
+$faker = Faker\Factory::create('fr_FR');
 
 $pdo = new PDO('mysql:host=localhost;dbname=tutoblog;charset=utf8', 'root', '@compteMySQL04', [
   PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
@@ -22,14 +22,16 @@ $categories = [];
 
 // On insère les données aléatoires dans chacune des tables en utilisant si besoin, les méthodes utilitaires de Faker
 for ($i = 0; $i < 50; $i++) {
-  $pdo->exec(
-    "INSERT INTO post
-    SET name='{$faker->sentence()}',
-        slug='{$faker->slug()}',
-        created_at='{$faker->date()} {$faker->time()}',
-        content='{$faker->paragraphs(rand(3, 15), true)}'
-  "
-  );
+
+  $statement = $pdo->prepare("INSERT INTO post SET name=?, slug=?, created_at=?, content=?");
+
+  $statement->execute([
+    $faker->sentence(),
+    $faker->slug(),
+    $faker->date() . ' ' . $faker->time(),
+    // $faker->realTextBetween(500, 1000), // Pour avoir du contenu en français
+    $faker->paragraph(15),
+  ]);
 
   $posts[] = $pdo->lastInsertId();
 }
